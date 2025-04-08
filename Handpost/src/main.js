@@ -1,7 +1,10 @@
 import { HandLandmarker, FilesetResolver, DrawingUtils } from "https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@0.10.18";
+import kNear from "./knear.js";
 
 const enableWebcamButton = document.getElementById("webcamButton")
 const logButton = document.getElementById("logButton")
+const logOButton = document.getElementById("logOButton")
+
 
 const video = document.getElementById("webcam")
 const canvasElement = document.getElementById("output_canvas")
@@ -11,9 +14,10 @@ const drawUtils = new DrawingUtils(canvasCtx)
 let handLandmarker = undefined;
 let webcamRunning = false;
 let results = undefined;
+let classifier =  new kNear(3);
 
 let image = document.querySelector("#myimage")
-
+const collectedData = [];
 
 /********************************************************************
 // CREATE THE POSE DETECTOR
@@ -31,7 +35,9 @@ const createHandLandmarker = async () => {
     console.log("model loaded, you can start webcam")
     
     enableWebcamButton.addEventListener("click", (e) => enableCam(e))
-    logButton.addEventListener("click", (e) => logAllHands(e)) 
+    logButton.addEventListener("click", (e) => logAllHands(e))
+    logOButton.addEventListener("click", (e) => logOHands(e))
+
 }
 
 /********************************************************************
@@ -82,10 +88,29 @@ async function predictWebcam() {
 // LOG HAND COORDINATES IN THE CONSOLE
 ********************************************************************/
 function logAllHands(){
+
     for (let hand of results.landmarks) {
-        // console.log(hand)
-        console.log(hand[4])
+        const flattened = hand.flatMap(point => [point.x, point.y, point.z]);
+        collectedData.push({
+            label: "Peace",
+            data: flattened
+        });
     }
+
+    console.log("Training Peace :", collectedData);
+}
+
+function logOHands(){
+
+    for(let hand of results.landmarks) {
+        const flattened = hand.flatMap(point => [point.x, point.y, point.z]);
+        collectedData.push({
+            label: "O",
+            data: flattened
+        })
+    }
+    console.log("Training O :" , collectedData)
+
 }
 
 /********************************************************************
