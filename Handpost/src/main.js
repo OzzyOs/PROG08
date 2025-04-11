@@ -6,7 +6,7 @@ const logMonkey = document.getElementById("logMonkey")
 const logHorse = document.getElementById("logHorse")
 const logDragon = document.getElementById("logDragon")
 const logFrog = document.getElementById("logFrog")
-
+const trainingData = document.getElementById("getData")
 
 const video = document.getElementById("webcam")
 const canvasElement = document.getElementById("output_canvas")
@@ -41,12 +41,15 @@ const createHandLandmarker = async () => {
     logHorse.addEventListener("click", (e) => logHorseSign(e))
     logDragon.addEventListener("click", (e) => logDragonSign(e))
     logFrog.addEventListener("click", (e) => logFrogSign(e))
+    trainingData.addEventListener("click", (e) => exportTrainingData(e))
 
 }
 
 /********************************************************************
 // START THE WEBCAM
 ********************************************************************/
+
+// Start webcam and draw a canvas over de video.
 async function enableCam() {
     webcamRunning = true;
     try {
@@ -68,6 +71,10 @@ async function enableCam() {
 /********************************************************************
 // START PREDICTIONS
 ********************************************************************/
+
+// Wait for app to detect camera for video.
+// if a hand is visible mark the vectors (locations of fingers/bones structure).
+// start tracking from the thumb.
 async function predictWebcam() {
     results = await handLandmarker.detectForVideo(video, performance.now())
 
@@ -97,6 +104,9 @@ async function predictWebcam() {
 /********************************************************************
 // LOG HAND COORDINATES IN THE CONSOLE
 ********************************************************************/
+
+// When function is called, store it locally in an array.
+// Log the array results.
 function logMonkeySign(){
 
     for (let hand of results.landmarks) {
@@ -107,6 +117,7 @@ function logMonkeySign(){
         });
         classifier.learn(flattened, "Monkey Sign")
     }
+    localStorage.setItem('collectedData', JSON.stringify(collectedData));
     console.log("Training Monkey :", collectedData);
 }
 
@@ -120,6 +131,7 @@ function logHorseSign(){
         })
         classifier.learn(flattened, "Horse")
     }
+    localStorage.setItem('collectedData', JSON.stringify(collectedData));
     console.log("Training Horse :" , collectedData)
 }
 
@@ -133,6 +145,7 @@ function logDragonSign(){
         })
         classifier.learn(flattened, "Dragon")
     }
+    localStorage.setItem('collectedData', JSON.stringify(collectedData));
     console.log("Training Dragon :" , collectedData)
 }
 
@@ -140,13 +153,39 @@ function logFrogSign(){
 
     for(let hand of results.landmarks) {
         const flattened = hand.flatMap(point => [point.x, point.y, point.z]);
+
         collectedData.push({
             label: "Frog",
             data: flattened
+
         })
         classifier.learn(flattened, "Frog")
     }
+    localStorage.setItem('collectedData', JSON.stringify(collectedData));
     console.log("Training Frog :" , collectedData)
+}
+
+/********************************************************************
+ // EXPORT TRAINING DATA AS JSON
+ ********************************************************************/
+
+// When function is called, get the filled 'collectedData' variable data.
+// If there is data stored, set 'storedData' array to an application.json type.
+// Proceed to download locally stored array in json format for later use.
+function exportTrainingData() {
+    let storedData = localStorage.getItem('collectedData');
+    if (storedData) {
+        let blob = new Blob([storedData], { type: 'application/json' });
+        let url = URL.createObjectURL(blob);
+        let a = document.createElement('a');
+        a.href = url;
+        a.download = 'trainingData.json';
+        a.click();
+        URL.revokeObjectURL(url);
+    } else {
+        alert("There is no training data, please use the buttons to create data!")
+        console.log("There is no training data, please use the buttons to create data!");
+    }
 }
 
 /********************************************************************
