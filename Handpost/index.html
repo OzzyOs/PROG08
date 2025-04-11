@@ -7,6 +7,8 @@
     <title>MediaPipe Handpose</title>
     <link rel="stylesheet" href="src/style.css">
     <script defer type="module" src="src/main.js"></script>
+    <script defer type="module" src="app.js"></script>
+
 </head>
 
 <body>
@@ -14,13 +16,17 @@
     <section>
         <h1>Handpose detection</h1>
         <button id="webcamButton">STARTWEBCAM</button>
-        <button id="logButton">PEACE</button>
-        <button id="logOButton">O </button>
+        <button id="logMonkey">Monkey</button>
+        <button id="logHorse">Horse</button>
+        <button id="logDragon">Dragon</button>
+        <button id="logFrog">Frog</button>
+
         <div class="videoView">
             <div style="position: relative;">
                 <video id="webcam" style="position: absolute;" muted autoplay playsinline></video>
                 <canvas id="output_canvas" style="position: absolute; left: 0px; top: 0px;"></canvas>
-                <div id="myimage">Volg mijn duim</div>
+                <div id="myimage">Prepare to sign</div>
+                <div id="predictionDisplay" style="font-size: 2rem; font-weight: bold; margin-top: 10px;"></div>
             </div>
         </div>
     </section>

@@ -2,8 +2,10 @@ import { HandLandmarker, FilesetResolver, DrawingUtils } from "https://cdn.jsdel
 import kNear from "./knear.js";
 
 const enableWebcamButton = document.getElementById("webcamButton")
-const logButton = document.getElementById("logButton")
-const logOButton = document.getElementById("logOButton")
+const logMonkey = document.getElementById("logMonkey")
+const logHorse = document.getElementById("logHorse")
+const logDragon = document.getElementById("logDragon")
+const logFrog = document.getElementById("logFrog")
 
 
 const video = document.getElementById("webcam")
@@ -33,10 +35,12 @@ const createHandLandmarker = async () => {
         numHands: 2
     });
     console.log("model loaded, you can start webcam")
-    
+
     enableWebcamButton.addEventListener("click", (e) => enableCam(e))
-    logButton.addEventListener("click", (e) => logAllHands(e))
-    logOButton.addEventListener("click", (e) => logOHands(e))
+    logMonkey.addEventListener("click", (e) => logMonkeySign(e))
+    logHorse.addEventListener("click", (e) => logHorseSign(e))
+    logDragon.addEventListener("click", (e) => logDragonSign(e))
+    logFrog.addEventListener("click", (e) => logFrogSign(e))
 
 }
 
@@ -62,13 +66,19 @@ async function enableCam() {
 }
 
 /********************************************************************
-// START PREDICTIONS    
+// START PREDICTIONS
 ********************************************************************/
 async function predictWebcam() {
     results = await handLandmarker.detectForVideo(video, performance.now())
 
     let hand = results.landmarks[0]
     if(hand) {
+        if (classifier.training.length > 0){
+            const inputVector = hand.flatMap(p => [p.x, p.y, p.z])
+            const prediction = classifier.classify(inputVector)
+            image.innerText = prediction; // keep if this is also useful for something
+            document.getElementById("predictionDisplay").innerText = `You signed: ${prediction}`;
+        }
         let thumb = hand[4]
         image.style.transform = `translate(${video.videoWidth - thumb.x * video.videoWidth}px, ${thumb.y * video.videoHeight}px)`
     }
@@ -87,30 +97,56 @@ async function predictWebcam() {
 /********************************************************************
 // LOG HAND COORDINATES IN THE CONSOLE
 ********************************************************************/
-function logAllHands(){
+function logMonkeySign(){
 
     for (let hand of results.landmarks) {
         const flattened = hand.flatMap(point => [point.x, point.y, point.z]);
         collectedData.push({
-            label: "Peace",
+            label: "Monkey",
             data: flattened
         });
+        classifier.learn(flattened, "Monkey Sign")
     }
-
-    console.log("Training Peace :", collectedData);
+    console.log("Training Monkey :", collectedData);
 }
 
-function logOHands(){
+function logHorseSign(){
 
     for(let hand of results.landmarks) {
         const flattened = hand.flatMap(point => [point.x, point.y, point.z]);
         collectedData.push({
-            label: "O",
+            label: "Horse",
             data: flattened
         })
+        classifier.learn(flattened, "Horse")
     }
-    console.log("Training O :" , collectedData)
+    console.log("Training Horse :" , collectedData)
+}
 
+function logDragonSign(){
+
+    for(let hand of results.landmarks) {
+        const flattened = hand.flatMap(point => [point.x, point.y, point.z]);
+        collectedData.push({
+            label: "Dragon",
+            data: flattened
+        })
+        classifier.learn(flattened, "Dragon")
+    }
+    console.log("Training Dragon :" , collectedData)
+}
+
+function logFrogSign(){
+
+    for(let hand of results.landmarks) {
+        const flattened = hand.flatMap(point => [point.x, point.y, point.z]);
+        collectedData.push({
+            label: "Frog",
+            data: flattened
+        })
+        classifier.learn(flattened, "Frog")
+    }
+    console.log("Training Frog :" , collectedData)
 }
 
 /********************************************************************

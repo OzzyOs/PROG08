@@ -6,7 +6,8 @@ body {
 #myimage {
     position: absolute;
     display: flex;
-    background-color:darkblue;
+    color: white;
+    background-color:red;
     z-index:3;
 }
 
