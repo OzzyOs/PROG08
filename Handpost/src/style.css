@@ -8,7 +8,25 @@ body {
     display: flex;
     color: white;
     background-color:red;
-    z-index:3;
+    z-index:20;
+}
+
+#predictionDisplay {
+    position: absolute;
+    bottom: 10px;
+    left: 75%;
+    transform: translateX(-50%);
+    background-color: rgba(0, 0, 0, 0.6);
+    padding: 0.5em;
+    border-radius: 8px;
+    z-index: 20;
+    text-align: center;
+    text-shadow: 0 0 5px black;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    max-height: 150px;
+    max-width: 200px;
 }
 
 p {
@@ -31,6 +49,8 @@ video {
 .videoView {
     position: relative;
     width: 48vw;
+    display: flex;
+    justify-content: space-between;
 }
 
 #output_canvas {

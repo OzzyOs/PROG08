@@ -2,10 +2,9 @@ import { HandLandmarker, FilesetResolver, DrawingUtils } from "https://cdn.jsdel
 import kNear from "./knear.js";
 
 const enableWebcamButton = document.getElementById("webcamButton")
-const logMonkey = document.getElementById("logMonkey")
-const logHorse = document.getElementById("logHorse")
-const logDragon = document.getElementById("logDragon")
-const logFrog = document.getElementById("logFrog")
+const logTen = document.getElementById("logTen")
+const logChi = document.getElementById("logChi")
+const logJin = document.getElementById("logJin")
 const trainingData = document.getElementById("getData")
 
 const video = document.getElementById("webcam")
@@ -17,6 +16,12 @@ let handLandmarker = undefined;
 let webcamRunning = false;
 let results = undefined;
 let classifier =  new kNear(3);
+
+const tenchijinImages = {
+    "Ten": "images/ten.jpg",
+    "Chi": "images/chi.jpg",
+    "Jin": "images/jin.jpg"
+}
 
 let image = document.querySelector("#myimage")
 const collectedData = [];
@@ -37,10 +42,9 @@ const createHandLandmarker = async () => {
     console.log("model loaded, you can start webcam")
 
     enableWebcamButton.addEventListener("click", (e) => enableCam(e))
-    logMonkey.addEventListener("click", (e) => logMonkeySign(e))
-    logHorse.addEventListener("click", (e) => logHorseSign(e))
-    logDragon.addEventListener("click", (e) => logDragonSign(e))
-    logFrog.addEventListener("click", (e) => logFrogSign(e))
+    logTen.addEventListener("click", (e) => logTenSign(e))
+    logChi.addEventListener("click", (e) => logChiSign(e))
+    logJin.addEventListener("click", (e) => logJinSign(e))
     trainingData.addEventListener("click", (e) => exportTrainingData(e))
 
 }
@@ -83,9 +87,43 @@ async function predictWebcam() {
         if (classifier.training.length > 0){
             const inputVector = hand.flatMap(p => [p.x, p.y, p.z])
             const prediction = classifier.classify(inputVector)
-            image.innerText = prediction; // keep if this is also useful for something
-            document.getElementById("predictionDisplay").innerText = `You signed: ${prediction}`;
+
+            image.innerText = prediction; // Keep if this is also useful for something
+
+            const display = document.getElementById("predictionDisplay");
+            display.innerHTML = ""; // Clear any previous content
+
+            if (tenchijinImages[prediction]) {
+                const img = document.createElement("img");
+                img.src = tenchijinImages[prediction];
+                img.alt = prediction;
+                img.style.maxWidth = "100%";
+                img.style.maxHeight = "100%";
+                display.appendChild(img); // Show Image when matching hand sign.
+
+                const span = document.createElement("span");
+                span.innerText = `${prediction}`;
+                span.style.color = "white";
+                display.appendChild(span); // Show Text when matching hand sign.
+            } else {
+                display.innerText = "Unknown Sign"; // Show text when hand sign is not registered.
+            }
+
+            const overlay = document.getElementById("overlayImage");
+            if (tenchijinImages[prediction]) {
+                overlay.style.backgroundImage = `url('${tenchijinImages[prediction]}')`;
+            } else {
+                overlay.style.backgroundImage = ""; // clear if unknown
+            }
+            } else {
+            // No hand detected — clear both displays
+            const overlay = document.getElementById("overlayImage");
+            overlay.style.backgroundImage = "";
+
+            const display = document.getElementById("predictionDisplay");
+            display.innerHTML = "<span style='color: white;'>No hand detected</span>";
         }
+
         let thumb = hand[4]
         image.style.transform = `translate(${video.videoWidth - thumb.x * video.videoWidth}px, ${thumb.y * video.videoHeight}px)`
     }
@@ -107,62 +145,46 @@ async function predictWebcam() {
 
 // When function is called, store it locally in an array.
 // Log the array results.
-function logMonkeySign(){
+function logTenSign(){
 
     for (let hand of results.landmarks) {
         const flattened = hand.flatMap(point => [point.x, point.y, point.z]);
         collectedData.push({
-            label: "Monkey",
+            label: "Ten",
             data: flattened
         });
-        classifier.learn(flattened, "Monkey Sign")
+        classifier.learn(flattened, "Ten")
     }
     localStorage.setItem('collectedData', JSON.stringify(collectedData));
-    console.log("Training Monkey :", collectedData);
+    console.log("Training Ten :", collectedData);
 }
 
-function logHorseSign(){
+function logChiSign(){
 
     for(let hand of results.landmarks) {
         const flattened = hand.flatMap(point => [point.x, point.y, point.z]);
         collectedData.push({
-            label: "Horse",
+            label: "Chi",
             data: flattened
         })
-        classifier.learn(flattened, "Horse")
+        classifier.learn(flattened, "Chi")
     }
     localStorage.setItem('collectedData', JSON.stringify(collectedData));
-    console.log("Training Horse :" , collectedData)
+    console.log("Training Chi :" , collectedData)
 }
 
-function logDragonSign(){
+function logJinSign(){
 
     for(let hand of results.landmarks) {
         const flattened = hand.flatMap(point => [point.x, point.y, point.z]);
         collectedData.push({
-            label: "Dragon",
+            label: "Jin",
             data: flattened
         })
-        classifier.learn(flattened, "Dragon")
+        classifier.learn(flattened, "Jin")
     }
     localStorage.setItem('collectedData', JSON.stringify(collectedData));
-    console.log("Training Dragon :" , collectedData)
-}
-
-function logFrogSign(){
-
-    for(let hand of results.landmarks) {
-        const flattened = hand.flatMap(point => [point.x, point.y, point.z]);
-
-        collectedData.push({
-            label: "Frog",
-            data: flattened
-
-        })
-        classifier.learn(flattened, "Frog")
-    }
-    localStorage.setItem('collectedData', JSON.stringify(collectedData));
-    console.log("Training Frog :" , collectedData)
+    console.log("Training Jin :" , collectedData)
 }
 
 /********************************************************************
