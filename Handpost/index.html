@@ -12,26 +12,27 @@
 </head>
 
 <body>
-    
-    <section>
-        <h1></h1>
-        <button id="webcamButton">Start training</button>
-        <button id="logTen">Ten</button>
-        <button id="logChi">Chi</button>
-        <button id="logJin">Jin</button>
-        <button id="getData">Download JSON</button>
-
-
-        <div class="videoView">
-            <div style="position: relative;">
-                <video id="webcam" style="position: absolute;" muted autoplay playsinline></video>
-                <div id="overlayImage"></div>
-                <canvas id="output_canvas" style="position: absolute; left: 0; top: 0;"></canvas>
-                <div id="myimage">""</div>
-                <div id="predictionDisplay" style="font-size: 2rem; font-weight: bold; margin-top: 10px;"></div>
-            </div>
+    <div class="container">
+        <div style="align-items: center; display: flex; ">
+            <button id="webcamButton">Start training</button>
+            <button id="logTen">Ten</button>
+            <button id="logChi">Chi</button>
+            <button id="logJin">Jin</button>
+            <button id="getData">Download JSON</button>
         </div>
-    </section>
+        <section>
+            <h1></h1>
+            <div class="videoView">
+                <div style="position: relative;">
+                    <video id="webcam" style="position: absolute;" muted autoplay playsinline></video>
+                    <div id="overlayImage"></div>
+                    <canvas id="output_canvas" style="position: absolute; left: 0; top: 0;"></canvas>
+                    <div id="myimage">""</div>
+                    <div id="predictionDisplay" style="font-size: 2rem; font-weight: bold; margin-top: 10px;"></div>
+                </div>
+            </div>
+        </section>
+    </div>
 </body>
 
 </html>
