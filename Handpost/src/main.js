@@ -113,15 +113,15 @@ async function predictWebcam() {
             if (tenchijinImages[prediction]) {
                 overlay.style.backgroundImage = `url('${tenchijinImages[prediction]}')`;
             } else {
-                overlay.style.backgroundImage = ""; // clear if unknown
+                // overlay.style.backgroundImage = ""; // clear if unknown
             }
             } else {
             // No hand detected — clear both displays
-            const overlay = document.getElementById("overlayImage");
-            overlay.style.backgroundImage = "";
-
-            const display = document.getElementById("predictionDisplay");
-            display.innerHTML = "<span style='color: white;'>No hand detected</span>";
+            // const overlay = document.getElementById("overlayImage");
+            // overlay.style.backgroundImage = "";
+            //
+            // const display = document.getElementById("predictionDisplay");
+            // display.innerHTML = "<span style='color: white;'>No hand detected</span>";
         }
 
         let thumb = hand[4]
