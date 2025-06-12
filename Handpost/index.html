@@ -5,34 +5,34 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>FFXIV NINJA SIM</title>
-    <link rel="stylesheet" href="src/style.css">
-    <script defer type="module" src="src/main.js"></script>
-    <script defer type="module" src="app.js"></script>
+    <link rel="stylesheet" href="../Handpost/src/style.css">
+    <script defer type="module" src="../Handpost/src/main.js"></script>
+    <script defer type="module" src="../Handpost/app.js"></script>
 
 </head>
 
-<body style="display: flex; flex-direction: column; align-items: center">
-    
-    <section style="justify-items: center">
-        <div style="display: flex; align-self: center; justify-content: space-between; max-width: 500px">
-        <h1></h1>
-            <button id="webcamButton" style="border-radius: 5px">Start training</button>
-            <button id="logTen" style="border-radius: 5px">Ten</button>
-            <button id="logChi" style="border-radius: 5px">Chi</button>
-            <button id="logJin" style="border-radius: 5px">Jin</button>
-            <button id="getData" style="border-radius: 5px">Download JSON</button>
+<body>
+    <div class="container">
+        <div style="align-items: center; display: flex; ">
+            <button id="webcamButton">Start training</button>
+            <button id="logTen">Ten</button>
+            <button id="logChi">Chi</button>
+            <button id="logJin">Jin</button>
+            <button id="getData">Download JSON</button>
         </div>
-
-        <div class="videoView">
-            <div style="position: relative;">
-                <video id="webcam" style="position: absolute;" muted autoplay playsinline></video>
-                <div id="overlayImage" style="margin-left: 100px"></div>
-                <canvas id="output_canvas" style="position: absolute; left: 0; top: 0;"></canvas>
-                <div id="myimage"></div>
-                <div id="predictionDisplay" style="font-size: 2rem; font-weight: bold; margin-top: 10px;"></div>
+        <section>
+            <h1></h1>
+            <div class="videoView">
+                <div style="position: relative;">
+                    <video id="webcam" style="position: absolute;" muted autoplay playsinline></video>
+                    <div id="overlayImage"></div>
+                    <canvas id="output_canvas" style="position: absolute; left: 0; top: 0;"></canvas>
+                    <div id="myimage">""</div>
+                    <div id="predictionDisplay" style="font-size: 2rem; font-weight: bold; margin-top: 10px;"></div>
+                </div>
             </div>
-        </div>
-    </section>
+        </section>
+    </div>
 </body>
 
 </html>
