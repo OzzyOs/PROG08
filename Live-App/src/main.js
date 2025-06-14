@@ -13,6 +13,19 @@ let webcamRunning = false;
 let results = undefined;
 let classifier =  new kNear(3);
 
+fetch('./model.json')
+    .then(res => res.json())
+    .then(modelData => {
+        // Loop through and feed into classifier
+        modelData.forEach(entry => {
+            classifier.learn(entry.data, entry.label);
+        });
+        console.log("Model loaded into classifier");
+    })
+    .catch(err => {
+        console.error("Failed to load model.json:", err);
+    });
+
 const tenchijinImages = {
     "Ten": "images/ten.jpg",
     "Chi": "images/chi.jpg",
@@ -20,7 +33,7 @@ const tenchijinImages = {
 }
 
 let image = document.querySelector("#myimage")
-const collectedData = [];
+// const collectedData = [];
 
 /********************************************************************
  // CREATE THE POSE DETECTOR

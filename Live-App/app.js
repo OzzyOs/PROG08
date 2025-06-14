@@ -2,6 +2,25 @@ import kNear from "./src/knear.js"
 
 const k = 3
 const machine = new kNear(k);
+let classifier;
+
+// Load model.json via fetch
+fetch('./model.json')
+    .then(res => res.json())
+    .then(modelData => {
+        classifier = new kNear(k, modelData);
+
+        // Sample live data to classify
+        const liveVector = [ /* your input array goes here */ ];
+
+        const prediction = classifier.classify(liveVector);
+        console.log(`I think this is a ${prediction} sign!`);
+    })
+    .catch(err => {
+        console.error('Failed to load model.json:', err);
+    });
+
+
 
 // machine.learn([6, 5, 9, 4], 'cat')
 // machine.learn([12, 20, 19, 3], 'dog')
