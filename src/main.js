@@ -27,9 +27,9 @@ fetch('./model.json')
     });
 
 const tenchijinImages = {
-    "Ten": "images/ten.jpg",
-    "Chi": "images/chi.jpg",
-    "Jin": "images/jin.jpg"
+    "Ten": "./public/images/ten.jpg",
+    "Chi": "./public/images/chi.jpg",
+    "Jin": "./public/images/jin.jpg"
 }
 
 let image = document.querySelector("#myimage")
