@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FFXIV NINJA SIM</title>
+    <link rel="stylesheet" href="src/style.css">
+    <script defer type="module" src="src/main.js"></script>
+    <script defer type="module" src="app.js"></script>
+</head>
+<header>
+
+</header>
+<body>
+
+<div class="container">
+    <div>
+        <h1>Final Fantasy 14 NINJA Recognition</h1>
+    </div>
+    <div style="align-items: center; display: flex; ">
+        <button id="webcamButton">Start stretching!</button>
+    </div>
+    <section>
+        <div class="videoView">
+            <div style="justify-self: center; ">
+                <video id="webcam" style="align-self: center;" muted autoplay playsinline></video>
+                <div id="overlayImage"></div>
+                <canvas id="output_canvas" style="position: absolute; left: 0; top: 0;"></canvas>
+                <div id="myimage"></div>
+                <div id="predictionDisplay" style="font-size: 2rem; font-weight: bold; margin-top: 10px;"></div>
+            </div>
+        </div>
+    </section>
+</div>
+</body>
+
+</html>
