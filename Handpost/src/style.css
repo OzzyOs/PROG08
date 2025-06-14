@@ -16,12 +16,10 @@ body {
 }
 
 .container {
-
     width: 90%;
     display: flex;
     flex-direction: column; /* Stack items inside the container */
     align-items: center; /* Center items horizontally within the container */
-    justify-content: center;
 }
 
 #predictionDisplay {
@@ -63,7 +61,7 @@ video {
     position: relative;
     width: 48vw;
     display: flex;
-    justify-content: space-between;
+    justify-content: center;
 }
 
 #output_canvas {
