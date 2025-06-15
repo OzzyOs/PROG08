@@ -16,44 +16,60 @@ let handLandmarker = undefined;
 let webcamRunning = false;
 let results = undefined;
 let classifier =  new kNear(3);
+let fixedTrainSet = [];
+let fixedTestSet = [];
+let modelLoaded = false;
 
-const testAccuracyButton = document.getElementById("testAccuracy");
-const accuracyDisplay = document.getElementById("accuracyDisplay");
-
-testAccuracyButton.addEventListener("click", async () => {
+async function loadAndSplitData() {
     try {
         const response = await fetch('src/model.json');
         const data = await response.json();
 
-        const shuffled = data.sort(() => 0.5 - Math.random());
+        // Shuffle data ONCE.
+        // Spread data array of model.json en sort it in random fashion.
+        // Take 80% of the shallow copy of 'shuffled' and put that in trainSize.
+        const shuffled = [...data].sort(() => 0.5 - Math.random());
         const trainSize = Math.floor(shuffled.length * 0.8);
-        const trainSet = shuffled.slice(0, trainSize);
-        const testSet = shuffled.slice(trainSize);
 
-        classifier = new kNear(3); // Reset classifier
-        trainSet.forEach(item => {
+        // Create an array of elements up to but including trainSize.
+        fixedTrainSet = shuffled.slice(0, trainSize);
+        // Create an array, 20%, of the remaining dataset.
+        fixedTestSet = shuffled.slice(trainSize);
+
+        // Train the classifier with ONE set.
+        classifier = new kNear(3);
+        fixedTrainSet.forEach(item => {
             classifier.learn(item.data, item.label);
         });
 
-        let correct = 0;
-        testSet.forEach(item => {
-            const predicted = classifier.classify(item.data);
-            if (predicted === item.label) {
-                correct++;
-            }
-        });
-
-        const accuracy = (correct / testSet.length) * 100;
-        accuracyDisplay.innerText = `Model Accuracy: ${accuracy.toFixed(2)}%`;
-        console.log(`Model Accuracy: ${accuracy.toFixed(2)}%`);
-
+        modelLoaded = true;
+        console.log("Model loaded and trained once with fixed sets.");
     } catch (error) {
-        console.error("Error testing model:", error);
-        accuracyDisplay.innerText = "Error testing model.";
+        console.error("Failed to load or split model data:", error);
     }
+}
+
+const testAccuracyButton = document.getElementById("testAccuracy");
+const accuracyDisplay = document.getElementById("accuracyDisplay");
+
+testAccuracyButton.addEventListener("click", () => {
+    if (!modelLoaded || fixedTestSet.length === 0) {
+        accuracyDisplay.innerText = "Model is not loaded yet.";
+        return;
+    }
+
+    let correct = 0;
+    fixedTestSet.forEach(item => {
+        const predicted = classifier.classify(item.data);
+        if (predicted === item.label) {
+            correct++;
+        }
+    });
+
+    const accuracy = (correct / fixedTestSet.length) * 100;
+    accuracyDisplay.innerText = `Model Accuracy: ${accuracy.toFixed(2)}%`;
+    console.log(`Model Accuracy: ${accuracy.toFixed(2)}%`);
 });
-
-
 
 const tenchijinImages = {
     "Ten": "images/ten.jpg",
@@ -251,6 +267,8 @@ function exportTrainingData() {
 /********************************************************************
 // START THE APP
 ********************************************************************/
+loadAndSplitData();
+
 if (navigator.mediaDevices?.getUserMedia) {
     createHandLandmarker()
 }
