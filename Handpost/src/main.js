@@ -17,6 +17,44 @@ let webcamRunning = false;
 let results = undefined;
 let classifier =  new kNear(3);
 
+const testAccuracyButton = document.getElementById("testAccuracy");
+const accuracyDisplay = document.getElementById("accuracyDisplay");
+
+testAccuracyButton.addEventListener("click", async () => {
+    try {
+        const response = await fetch('src/model.json');
+        const data = await response.json();
+
+        const shuffled = data.sort(() => 0.5 - Math.random());
+        const trainSize = Math.floor(shuffled.length * 0.8);
+        const trainSet = shuffled.slice(0, trainSize);
+        const testSet = shuffled.slice(trainSize);
+
+        classifier = new kNear(3); // Reset classifier
+        trainSet.forEach(item => {
+            classifier.learn(item.data, item.label);
+        });
+
+        let correct = 0;
+        testSet.forEach(item => {
+            const predicted = classifier.classify(item.data);
+            if (predicted === item.label) {
+                correct++;
+            }
+        });
+
+        const accuracy = (correct / testSet.length) * 100;
+        accuracyDisplay.innerText = `Model Accuracy: ${accuracy.toFixed(2)}%`;
+        console.log(`Model Accuracy: ${accuracy.toFixed(2)}%`);
+
+    } catch (error) {
+        console.error("Error testing model:", error);
+        accuracyDisplay.innerText = "Error testing model.";
+    }
+});
+
+
+
 const tenchijinImages = {
     "Ten": "images/ten.jpg",
     "Chi": "images/chi.jpg",
